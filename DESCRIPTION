@@ -3,7 +3,7 @@ Title: nested modes of evolution
 Version: 0.1
 Author: Mark Puttick (mark.puttick@bristol.ac.uk)
 Description: A package to fit nested modes of evolution
-Depends: R, ape, arbutus, geiger, mvtnorm
+Depends: R, ape, arbutus, geiger, mvtnorm, parallel
 License: GNU
 Encoding: UTF-8
 LazyData: true
