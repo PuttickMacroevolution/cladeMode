@@ -4,7 +4,7 @@
 \alias{model_sim}
 \title{model_sim}
 \usage{
-model_sim(phy, sim_data, n_core = 1)
+model_sim(phy, sim_data, n_core = 1, nReps = 100)
 }
 \arguments{
 \item{phy}{input phylogeny}
