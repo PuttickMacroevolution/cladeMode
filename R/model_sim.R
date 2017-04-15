@@ -10,7 +10,7 @@
 #' @examples
 #' model_sim()
 
-model_sim <- function(phy, sim_data, n_core=1, nReps=100) {
+model_sim <- function(phy, sim_data, n_core=1, nReps=1000) {
 	bm_res <- mclapply(1:nReps, mc.cores=n_core, function(x) cladeMode(phy, sim_data[,x], mode="BM", contrasts=T))
 	bm_res <- matrix(unlist(bm_res), ncol=nReps)
 	eb_res <- mclapply(1:nReps, mc.cores=n_core,function(x) cladeMode(phy, sim_data[,x], mode="EB", contrasts=T))
