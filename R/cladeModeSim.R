@@ -79,8 +79,9 @@ cladeModeSim <- function(n = 1, phy, node, model = c("BM", "EB", "nestedEB", "ne
         	y <- as.matrix(t(rmvnorm(1, sigma = vv)))
         	yy <- cbind(yy, y)
         	}
-        	rownames(y) <- phy$tip.label
-        	return(y)
+        y <- yy
+       	rownames(y) <- phy$tip.label
+       	return(y)
     }
     if (model == "rateShift") {
     	yy <- c()
