@@ -36,6 +36,6 @@ y a matrix of simulated values
 Simulate various nested modes of trait evolution
 }
 \examples{
-cladeMode()
+cladeModeSim()
 }
 

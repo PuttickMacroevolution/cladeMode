@@ -15,7 +15,6 @@
 #' @examples
 #' cladeMode()
 
-
 cladeMode <- function(phy, y, node=F, minSize=5, mode=c("BM", "EB",  "nestedEB", "nestedEBRate", "rateShift", "nestedOU", "rateSlow"), Ncores=1, contrasts=F, returnPhy=FALSE) {
 	require(parallel)
 	require(ape)
