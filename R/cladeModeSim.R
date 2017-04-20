@@ -18,7 +18,7 @@
 #' cladeMode()
 
 
-cladeMode <- function (n = 1, phy, node, model = c("BM", "EB", "nestedEB", 
+cladeModeSim <- function (n = 1, phy, node, model = c("BM", "EB", "nestedEB", 
     "nestedEBRate", "rateShift", "nestedOU", "OU"), beta = 1, 
     a = NULL, alpha = 0.05, shiftRate = 0.5, ebBeta = 2) 
 {
