@@ -54,7 +54,7 @@ cladeModeSim <- function(n = 1, phy, node, model = c("BM", "EB", "nestedEB", "ne
         	}
         	
         y <- yy
-        rownames(y) <- phy$tip.labels     
+        rownames(y) <- phy$tip.label
         return(y)
     }
     if (model == "nestedEBRate") {
