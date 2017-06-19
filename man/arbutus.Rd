@@ -12,4 +12,3 @@ arbutus modified function from arbutus
 \examples{
 arbutus()
 }
-

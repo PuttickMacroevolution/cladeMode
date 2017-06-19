@@ -20,4 +20,3 @@ plot EB phylogeny
 \examples{
 cladeMode()
 }
-

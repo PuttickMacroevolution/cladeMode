@@ -18,4 +18,3 @@ convert treeSim to APE
 \examples{
 phyIC()
 }
-

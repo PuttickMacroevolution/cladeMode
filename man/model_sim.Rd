@@ -17,4 +17,3 @@ summarise simulations
 \examples{
 model_sim()
 }
-

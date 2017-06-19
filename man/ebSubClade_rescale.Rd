@@ -20,4 +20,3 @@ Internal function to rescale phylogeny with early burst values
 \examples{
 cladeMode()
 }
-

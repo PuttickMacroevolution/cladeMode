@@ -20,4 +20,3 @@ split.vcv.node
 \examples{
 split.vcv.node()
 }
-

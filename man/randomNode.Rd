@@ -19,4 +19,3 @@ randomNode
 \examples{
 nodeDes()
 }
-

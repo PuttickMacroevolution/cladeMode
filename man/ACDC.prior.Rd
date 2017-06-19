@@ -12,4 +12,3 @@ ACDC.prior function from Geiger
 \examples{
 ACDC.prior()
 }
-

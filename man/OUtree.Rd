@@ -15,4 +15,3 @@ rateClade function
 \examples{
 OUtree()
 }
-

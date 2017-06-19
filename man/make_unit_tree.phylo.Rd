@@ -12,4 +12,3 @@ make_unit_tree.phylo function from arbutus
 \examples{
 make_unit_tree.phylo()
 }
-

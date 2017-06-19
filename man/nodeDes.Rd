@@ -17,4 +17,3 @@ nodeDes
 \examples{
 nodeDes()
 }
-

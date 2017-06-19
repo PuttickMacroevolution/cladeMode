@@ -22,4 +22,3 @@ getNodes function
 \examples{
 getNodes()
 }
-

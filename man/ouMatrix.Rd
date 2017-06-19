@@ -15,4 +15,3 @@ ouMatrix function from Graham Slater
 \examples{
 ouMatrix()
 }
-

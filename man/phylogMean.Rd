@@ -15,4 +15,3 @@ phylogMean function from Graham Slater
 \examples{
 phylogMean()
 }
-

@@ -18,4 +18,3 @@ findNodes function
 \examples{
 findNodes()
 }
-

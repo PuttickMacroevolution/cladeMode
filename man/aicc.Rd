@@ -22,4 +22,3 @@ aicc function
 \examples{
 aicc()
 }
-

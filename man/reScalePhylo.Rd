@@ -16,4 +16,3 @@ reScalePhylo function
 \examples{
 reScalePhylo()
 }
-

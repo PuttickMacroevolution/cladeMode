@@ -4,24 +4,24 @@
 \alias{cladeMode}
 \title{Analyse nested modes of evolution}
 \usage{
-cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "EB", "nestedEB",
-  "nestedEBRate", "rateShift", "nestedOU", "rateSlow"), Ncores = 1,
-  contrasts = F, returnPhy = FALSE)
+cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "OU", "EB",
+  "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), Ncores = 1,
+  contrasts = FALSE, returnPhy = FALSE)
 }
 \arguments{
-\item{phy}{tree in APE formate}
-
 \item{y}{named vector of trait data}
 
-\item{node}{number of node at which to estimate nested evolutionary mode. If FALSE (default) the model searches across all nodes}
+\item{node}{number of node at which to estimate nested evolutionary mode. If FALSE (default) the model tests model fit at all nodes using an iterative procedure. The nodes at which the model is applied it determined by the minSize argument}
 
-\item{minSize}{the minimum size of node at which to select a nested rate}
+\item{minSize}{the minimum size of node at which to select a nested rate. The number represents the minimum size of the clade for which all models will be nested.}
 
-\item{mode}{of evolution for the model. One of "BM", "EB", "nestedEB", "nestedEBRate", "rateShift", "nestedOu", "rateSlow")}
+\item{mode}{of evolution for the model. One of "BM", "EB", "OU", "nestedEB", "nestedEBRate", "rateShift", "nestedOU"). "BM" fits a simple model of Brownian Motion; "EB" fits the early burst model (Harmon et al. 2010); "OU" fits the Orstein-Uhlenbeck model (Hansen). The 'nested' models allow shifts to occur in subclades of the phylogeny with an ancestral BM model. 'nested EB' allows for a EB model to a subclade; 'nested EB rate' fits a model a similar model but with the addition of a scalar that allows for an increase on the ancestral BM rate; "nested OU" fits a nested model of the OU process which optimises the alpha parameter; and the "rateShift" model allows for a scalar-based increase or decrease rate in a nested subclade (O'Meara et al. 2006; Thomas et al. 2006)}
 
-\item{contrasts}{logical (default = FALSE) as to whether to estimate parameters with likelihood search or independent contrasts}
+\item{contrasts}{logical (default = FALSE) as to whether to estimate parameters with the default likelihood search or independent contrasts}
 
-\item{returnPhy}{logical (default = FALSE) return re-scaled phylogeny}
+\item{returnPhy}{logical (default = FALSE) returns re-scaled phylogeny according the best-fitting model}
+
+\item{dated}{phy tree in APE format. Although non-ultrametric phylogenies can be used the method has only been tested on ultrametric trees.}
 
 \item{ncores}{number of seperate cores to simultaneously estimate rate shifts - defaults to 1}
 }
@@ -29,9 +29,60 @@ cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "EB", "nestedEB",
 results a list containing the model parameters, log likelihood, aicc, optionally the rescaled tree
 }
 \description{
-Analyses various nested modes of trait evolution
+Analyses various nested modes of continous trait evolution the can be applied to the whole phylogeny (BM, OU, EB) or nested within subclades of the phylogeny ("nested EB", "nested EB rate", "rate Shift", "nested OU")
 }
 \examples{
-cladeMode()
+library(geiger)
+set.seed(30)
+# simulate tree with 20 species
+simTree <- rcoal(20)
+simData <- t(rmvnorm(1, sigma=vcv(simTree)))
+rownames(simData) <- simTree$tip.label
+##### comparison between geiger and cladeMode parameter estimates using early burst model
+#cladeMode
+unlist(cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T))
+#cladeMode paramater estimates 
+#         lnl   root.state         beta            a          aic         aicc            k 
+#-13.12825138  -0.38104635   1.14123829  -0.06945831  32.25650276  33.85650276   3.00000000 
+unlist(fitContinuous(simTree, simData[,1], model="EB")[[4]])
+# a          sigsq       z0           lnL        method	k	aic			aicc
+# -0.06945   1.14123  -0.3810463  -13.1282513    subplex	3	32.2565		33.7565
+# The parameters are identical but there is one discrepency - cladeMode uses n in the aicc calculation as the number of taxa (i.e, Butler and King 2004; O'Meara et al. 2006), but Geiger uses n + 1 . This should not affect results as only cladeMode is used in all analyses and thus comparison of AICc values are consistent, but care should be taken if compared against Geiger models
+# cladeMode AICc
+n=20
+k=3
+2 * k * (n - 1)/(n - k - 2) - 2 * -13.12825138
+# Geiger AICc
+n=21
+k=3
+2 * k * (n - 1)/(n - k - 2) - 2 * -13.12825138
+################### Comparison of models            
+# example use of each model in the function cladeMode          
+# bm  
+bmRes <- cladeMode(phy=simTree, y=simData[,1], mode="BM", cont=T)
+# early burst
+ebRes <-cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T)
+nestedEBRateRes <-cladeMode(phy=simTree, y=simData[,1], mode="nestedEBRate", cont=T)
+# nested early burst 
+nestedEBRes <-cladeMode(phy=simTree, y=simData[,1], mode="nestedEB", cont=T)
+# nested OU
+nestedOURes <-cladeMode(phy=simTree, y=simData[,1], mode="nestedOU", cont=T)
+# nested rate shift
+nestedRateShiftRes <-cladeMode(phy=simTree, y=simData[,1], mode="rateShift", cont=T)
+#comparison of models to summarise the best relative fit
+aicW <- aiccWeight(c(bmRes$aicc, ebRes$aicc, nestedEBRateRes$aicc, nestedEBRes$aicc, nestedOURes$aicc, nestedRateShiftRes$aicc))
+rownames(aicW) <- c("bm", "eb", "nestedEBRate", "nestedEB", "nestedOU", "nestedRateShift")
+aicW
+# nested rate shift has highest, but erroneus support (data were simulated under BM)
+# Error correction. We will simulate 100 datasets (1000 were used in the ms, 100 used here for brevity) under BM and identify the error rate for the nested rate shift model
+hunderedSim <- cladeModeSim(n=100,simTree, model="BM")
+# get aicc of nested rate models
+nestedRateAICcSim <- sapply(1:100, function(x) cladeMode(phy=simTree, y=hunderedSim[,x], mode="rateShift", cont=T)$aicc)
+# get aicc of bm models
+bmAICcSim <- sapply(1:100, function(x) cladeMode(phy=simTree, y=hunderedSim[,x], mode="BM", cont=T)$aicc)
+#calculate the 95th quantile under which nested rate is wrongly support
+cutOffAICc <- as.numeric(quantile(nestedRateAICcSim - bmAICcSim, 0.95))
+# add this number to nested rate aicc score and bm receives true model support
+aicW <- aiccWeight(c(bmRes$aicc, nestedRateShiftRes$aicc + cutOffAICc))
+aicW
 }
-

@@ -8,7 +8,7 @@
 #' @examples
 #' 
 
-cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedEBRate", "rateShift", "rateSlow", "nestedOU"), cont, returnPhy) {
+cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), cont, returnPhy) {
 	
 	IC <- cont
  	allTimes <- branching.times(phy)
@@ -181,57 +181,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
   		return(results)
   	}
   	  	
-  		if(model == "rateSlow") {
-	
-		k <- 3
-		if(IC == F) {
-			start <- c(startBM, log(0.5))
-			upper <- c(upperBM, log(1))
-			lower <- c(lowerBM, lowerBM)
-			release.mat <- split.vcv.node(phy, node)
-			bm.mat <- release.mat[[1]]
-			shift.mat <- release.mat[[2]]
-  			foo <- function(x) {
-				vv <- exp(x[1]) * (bm.mat + (exp(x[2]) * shift.mat))  
-    			diag(vv) <- diag(vv) #+ meserr^2
-    			mu <- phylogMean(vv, y)  
-      			mu<-rep(mu, n)
-      			return(-dmvnorm(y, mu, vv, log = T))
-    			}
-  			o <- optim(foo, p = start, lower = lower, upper = upper, method = "L");
-  			ml.vcv <- exp(o$par[2]) * (bm.mat + (exp(o$par[1]) * shift.mat))
-  			root.state <- phylogMean(ml.vcv, y)
-  			results <- list(lnl = -o$value, root.state = root.state, beta = exp(o$par[1]), shiftRate = exp(o$par[2]), focalnode = node);
-  		} else
-  		{
-  			relations_num <- monoClade(phy, node)
-  			originTimeFocal <- allTimes[which(names(allTimes) == node)]
-  			times <- c()
-  			for(u in 1:length(allTimes)) times[which(phy$edge[,1] == names(allTimes)[u])] <- allTimes[u]
-  			branches <- match(relations_num , phy$edge[,2])
-  			if(any(is.na(branches))) branches <- branches[complete.cases(branches)]
-  			start <- log(0.5)
-			upper <- log(1)
-			lower <- lowerBM
-			foo <- function(x) {
-				eb.mat <- rateClade(phy, branches=branches, rate=exp(x))
-				return(-phyIC(eb.mat, y)$logLikelihood)
-				}
-			o <- optim(foo, p = start, lower = lower, upper = upper, method = "L");
-			mlPhy <- rateClade(phy, branches=branches, rate=exp(o$par))
-			xx <- phyIC(mlPhy, y)
-			results <- list(lnl = xx$logLikelihood, root.state = as.numeric(xx$phyloMean), beta = xx$sigmaSq, shiftRate = exp(o$par), focalnode = node);
-			if(returnPhy == TRUE) results$phy <- xx$rescaledPhylo
-  		}  		
-  		
-  		results$aic <- 2 * k - 2 * results$lnl
-  		results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
-  		results$k <- k
-  		return(results)
-  	}
-  	
-
-	if(model == "nestedOU") {
+ 	if(model == "nestedOU") {
 
 		k <- 3
 		if(IC == F){

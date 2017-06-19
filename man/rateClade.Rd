@@ -18,4 +18,3 @@ rateClade function
 \examples{
 rateClade()
 }
-

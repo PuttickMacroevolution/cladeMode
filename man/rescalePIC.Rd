@@ -15,4 +15,3 @@ rescalePIC function
 \examples{
 rescalePIC()
 }
-

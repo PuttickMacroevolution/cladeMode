@@ -17,4 +17,3 @@ monoTips
 \examples{
 monoTips()
 }
-

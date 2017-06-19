@@ -18,4 +18,3 @@ subClade function
 \examples{
 subClade()
 }
-

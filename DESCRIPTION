@@ -4,4 +4,4 @@ Version: 0.1
 Author: Mark Puttick (mark.puttick@bristol.ac.uk)
 Description: A package to fit nested modes of evolution
 Depends: R, ape, arbutus, geiger, mvtnorm, parallel
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1

@@ -18,4 +18,3 @@ aicc weight function
 \examples{
 aiccWeight()
 }
-

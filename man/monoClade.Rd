@@ -15,4 +15,3 @@ identify nodes of a monophyletic clade
 \examples{
 monoClade()
 }
-

@@ -15,4 +15,3 @@ independent contrasts calculation
 \examples{
 phyIC()
 }
-

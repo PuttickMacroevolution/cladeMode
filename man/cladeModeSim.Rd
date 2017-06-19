@@ -38,4 +38,3 @@ Simulate various nested modes of trait evolution
 \examples{
 cladeModeSim()
 }
-
