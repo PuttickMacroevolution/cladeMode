@@ -39,30 +39,29 @@ set.seed(30)
 # simulate tree with 20 species
 simTree <- rcoal(20)
 simData <- cladeModeSim(n=1, phy=simTree, mode="BM")
+
 ##### comparison between geiger and cladeMode parameter estimates using early burst model
+
 #cladeMode
+
 unlist(cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T))
 #cladeMode paramater estimates 
-#         lnl   root.state         beta            a          aic         aicc            k 
-#-13.12825138  -0.38104635   1.14123829  -0.06945831  32.25650276  33.85650276   3.00000000 
+
+#	lnl		root.state	beta	a	aic	aicc	k 
+#	-13.12825138	-0.38104635	1.14123829	-0.06945831	32.25650276	33.75650276	3.00000000 
+
+#fitContinuous
 unlist(fitContinuous(simTree, simData[,1], model="EB")[[4]])
-# a          sigsq       z0           lnL        method	k	aic			aicc
-# -0.06945   1.14123  -0.3810463  -13.1282513    subplex	3	32.2565		33.7565
-# The parameters are identical but there is one discrepency - cladeMode uses n in the aicc calculation as the number of taxa (i.e, Butler and King 2004; O'Meara et al. 2006), but Geiger uses n + 1 . This should not affect results as only cladeMode is used in all analyses and thus comparison of AICc values are consistent, but care should be taken if compared against Geiger models
-# cladeMode AICc
-n=20
-k=3
-2 * k * (n - 1)/(n - k - 2) - 2 * -13.12825138
-# Geiger AICc
-n=21
-k=3
-2 * k * (n - 1)/(n - k - 2) - 2 * -13.12825138
+#	a	sigsq	z0	lnL	method	k	aic	aicc
+#	-0.06945	1.14123	-0.3810463	-13.1282513	subplex	3	32.2565	33.7565
+
 ################### Comparison of models            
 # example use of each model in the function cladeMode          
 # bm  
 bmRes <- cladeMode(phy=simTree, y=simData[,1], mode="BM", cont=T)
 # early burst
 ebRes <-cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T)
+# nested early burst with concurrent rate increase
 nestedEBRateRes <-cladeMode(phy=simTree, y=simData[,1], mode="nestedEBRate", cont=T)
 # nested early burst 
 nestedEBRes <-cladeMode(phy=simTree, y=simData[,1], mode="nestedEB", cont=T)
@@ -76,7 +75,7 @@ rownames(aicW) <- c("bm", "eb", "nestedEBRate", "nestedEB", "nestedOU", "nestedR
 aicW
 # nested rate shift has highest, but erroneus support (data were simulated under BM)
 # Error correction. We will simulate 100 datasets (1000 were used in the ms, 100 used here for brevity) under BM and identify the error rate for the nested rate shift model
-hunderedSim <- cladeModeSim(n=100,simTree, model="BM")
+hunderedSim <- cladeModeSim(n=100, simTree, mode="BM")
 # get aicc of nested rate models
 nestedRateAICcSim <- sapply(1:100, function(x) cladeMode(phy=simTree, y=hunderedSim[,x], mode="rateShift", cont=T)$aicc)
 # get aicc of bm models
