@@ -76,11 +76,10 @@ cladeMode <- function(phy, y, node=F, minSize=5, mode=c("BM", "OU", "EB",  "nest
 	
 	cont <- contrasts
 	nested <- c("nestedEB", "nestedEBRate", "rateShift", "nestedOU")
-	if(measureError == NULL) measureError <- rep(0, Ntip(phy))
+	if(is.null(measureError)) measureError <- rep(0, Ntip(phy))
 	
 	mErr <- measureError 
 	
-
 	if(sum(node) != 0 && is.na(match(mode, nested))) print("mode applies to whole tree: node argument ignored")
 	if(is.null(names(y)) == T) stop("please provide data names")
 	if(length(measureError) != Ntip(phy)) stop("measurement error not equal in length to trait data")
