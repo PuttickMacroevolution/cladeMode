@@ -1,6 +1,6 @@
 #' reScalePhylo function
 #'
-#' reScalePhylo function
+#' reScalePhylo (internal function)
 #' @param phy
 #' @param y
 #' @param param

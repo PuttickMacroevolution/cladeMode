@@ -11,7 +11,7 @@ reScalePhylo(phy, y, param, model = c("BM", "EB", "nestedEB", "nestedEBRate",
 list phylogeny and matrix of parameters
 }
 \description{
-reScalePhylo function
+reScalePhylo (internal function)
 }
 \examples{
 reScalePhylo()

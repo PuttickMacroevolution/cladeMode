@@ -1,10 +1,10 @@
 #' rescalePIC function
 #'
-#' rescalePIC function
-#' @param phy
-#' @param y
+#' rescalePIC a function to produce a re-scaled phylogeny using IC
+#' @param phy dated tree in ape format
+#' @param y named vector of trait values
 #' @keywords 
-#' @return node
+#' @return phy a rescaled phylogeny
 #' @export
 #' @examples
 #' rescalePIC()

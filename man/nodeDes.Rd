@@ -7,13 +7,20 @@
 nodeDes(phylo, node)
 }
 \arguments{
-\item{phylo}{input phylogeny}
+\item{phylo}{input tree in APE formate}
 
 \item{node}{}
 }
+\value{
+a vector of tip labels
+}
 \description{
-nodeDes
+identifies the tip descendents of an ancestral node
 }
 \examples{
-nodeDes()
+library(geiger)
+set.seed(30)
+# simulate tree with 20 species
+simTree <- rcoal(20)
+nodeDes(simTree, 22)
 }

@@ -6,6 +6,9 @@
 \usage{
 monoClade(phylo, node)
 }
+\arguments{
+\item{phylo}{dated tree in ape format}
+}
 \value{
 storeNodes
 }

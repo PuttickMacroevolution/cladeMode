@@ -1,6 +1,6 @@
 #' rateClade function
 #'
-#' rateClade function
+#' rateClade function (internal function) rescale tree according to an OU process using alpha
 #' @param phy_tree
 #' @param alpha
 #' @param branches

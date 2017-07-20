@@ -15,8 +15,11 @@
 vcvMatrix vcv matrix
 }
 \description{
-split.vcv.node
+split.vcv.node produces two VCV matrices that represent a monophyletic subclade and the remaining phylogeny respectively
 }
 \examples{
-split.vcv.node()
+set.seed(30)
+#simulate tree with 20 species
+simTree <- rcoal(20)
+split.vcv.node(simTree, 22)
 }

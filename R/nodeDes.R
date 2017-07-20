@@ -1,13 +1,18 @@
 #' nodeDes
 #'
-#' nodeDes
-#' @param phylo input phylogeny
+#' identifies the tip descendents of an ancestral node
+#' @param phylo input tree in APE formate
 #' @param node 
 #' @keywords 
-#' @return
+#' @return a vector of tip labels
 #' @export
 #' @examples
-#' nodeDes()
+#' @examples
+#' library(geiger)
+#' set.seed(30)
+#' # simulate tree with 20 species
+#' simTree <- rcoal(20)
+#' nodeDes(simTree, 22)
 
 nodeDes <- function (phylo, node) 
 {

@@ -1,6 +1,6 @@
 #' aicc function
 #'
-#' aicc function
+#' aicc function caculates aicc (used internally)
 #' @param x likelihood
 #' @param k parameters
 #' @param n sample size

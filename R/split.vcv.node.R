@@ -1,13 +1,16 @@
 #' split.vcv.node
 #'
-#' split.vcv.node
+#' split.vcv.node produces two VCV matrices that represent a monophyletic subclade and the remaining phylogeny respectively
 #' @param phy input phylogeny
 #' @param node 
 #' @keywords 
 #' @return vcvMatrix vcv matrix
 #' @export
 #' @examples
-#' split.vcv.node()
+#' set.seed(30)
+#' #simulate tree with 20 species
+#' simTree <- rcoal(20)
+#' split.vcv.node(simTree, 22)
 
 split.vcv.node <- function(phy, node){
   mat <- vcv(phy)

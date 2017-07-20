@@ -5,7 +5,7 @@
 \title{Analyse nested modes of evolution - internal function}
 \usage{
 cladeModeNode(phy, y, node, model = c("BM", "EB", "nestedEB", "nestedEBRate",
-  "rateShift", "nestedOU"), cont, returnPhy)
+  "rateShift", "nestedOU"), cont, returnPhy, mErr)
 }
 \description{
 Internal function to analyses various nested modes of trait evolution

@@ -8,7 +8,7 @@
 #' @examples
 #' 
 
-cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), cont, returnPhy) {
+cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), cont, returnPhy, mErr) {
 	
 	IC <- cont
  	allTimes <- branching.times(phy)
@@ -27,6 +27,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 		results <- list(lnl = picMark$logLikelihood, root.state = as.numeric(picMark$phyloMean), beta = picMark$sigmaSq)
 		results$aic <- 2 * k - 2 * picMark$logLikelihood
   		results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * picMark$logLikelihood
+   		results$aicc <- aicc(picMark$logLikelihood, k, Ntip(phy))	
   		results$k <- k
   		if(returnPhy == TRUE) results$phy <- phy
   		return(results)
@@ -49,6 +50,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 			foo <- function(x) {
     			eb.mat <- ebSubClade(phy, a=x[2], node=node, branches, times, originTimeFocal)
     			vv <- exp(x[1]) * (bm.mat + eb.mat)
+    			diag(vv) <- diag(vv) + mErr ^ 2
     			mu <- phylogMean(vv, y)  
      			mu <- rep(mu, n)
       			return(-dmvnorm(y, mu, vv, log = T))
@@ -77,7 +79,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 			}
 			
 			results$aic <- 2 * k - 2 * results$lnl
-			results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+			results$aicc <- aicc(results$lnl, k, Ntip(phy))
 			results$k <- k
 			return(results)
     }
@@ -99,7 +101,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
     		foo <- function(x) {
   		  		eb.mat <- ebSubClade(phy, a=x[3], node, branches, times, originTimeFocal)
     				vv <- exp(x[1]) * (bm.mat + (exp(x[2]) * eb.mat))  
-    				diag(vv) <- diag(vv) #+ meserr^2
+    				diag(vv) <- diag(vv) + mErr ^ 2
     				mu <- phylogMean(vv, y)  
      			mu <- rep(mu, n)
       			return(-dmvnorm(y, mu, vv, log = T))
@@ -125,7 +127,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 		}
   		  		
    		results$aic <- 2 * k - 2 * results$lnl
-  		results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+   		results$aicc <- aicc(results$lnl, k, Ntip(phy))
   		results$k <- k
   		return(results)
 	}
@@ -142,7 +144,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 			shift.mat <- release.mat[[2]]
  			foo <- function(x) {
 				vv <- exp(x[1]) * (bm.mat + (exp(x[2]) * shift.mat))  
-    			diag(vv) <- diag(vv) #+ meserr^2
+    			diag(vv) <- diag(vv) + mErr ^ 2
     			mu <- phylogMean(vv, y)  
     		  	mu<-rep(mu, n)
       			return(-dmvnorm(y, mu, vv, log = T))
@@ -176,7 +178,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
   		}
   		  		
   		results$aic <- 2 * k - 2 * results$lnl
-  		results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+		results$aicc <- aicc(results$lnl, k, Ntip(phy))
   		results$k <- k
   		return(results)
   	}
@@ -195,8 +197,8 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
   
 			foo <- function(x) {
     			vv <- exp(x[1]) * (bm.mat + ouMatrix(shift.mat, exp(x[2])))
-    			diag(vv) <- diag(vv) #+ meserr^2
-    			mu <- phylogMean(vv, y)  
+				diag(vv) <- diag(vv) + mErr ^ 2
+				mu <- phylogMean(vv, y)  
       			mu<-rep(mu, n)
       			return(-dmvnorm(y, mu, vv, log = T))
     			}
@@ -228,7 +230,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
   		}
   			
   			results$aic <- 2 * k - 2 * results$lnl
-  			results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+			results$aicc <- aicc(results$lnl, k, Ntip(phy))
   			results$k <- k
   			return(results)  
   		}
@@ -251,7 +253,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
 	  		foo <- function(x) {
     			eb.mat <- ebSubClade(phy, a=x[2], node=node, branches=branches, times=times, originTime=originTimeFocal)
     			vv <- exp(x[1]) * (eb.mat)  
-    			diag(vv) <- diag(vv) #+ meserr^2
+    			diag(vv) <- diag(vv) + mErr ^ 2
     			mu <- phylogMean(vv, y)  
       			mu<-rep(mu, n)
       			return(-dmvnorm(y, mu, vv, log = T))
@@ -278,7 +280,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
   		}
   		  		
   		results$aic <- 2 * k - 2 * results$lnl
-  		results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+		results$aicc <- aicc(results$lnl, k, Ntip(phy))
   		results$k <- k
   		return(results) 
 	}
@@ -294,7 +296,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
         vcvMat <- vcv(phy)
         foo <- function(x) {
             vv <- exp(x[1]) * ouMatrix(vcvMat, exp(x[2]))
-            diag(vv) <- diag(vv)
+           	diag(vv) <- diag(vv) + mErr ^ 2
             mu <- phylogMean(vv, y)
             mu <- rep(mu, n)
             return(-dmvnorm(y, mu, vv, log = T))
@@ -332,7 +334,7 @@ cladeModeNode <- function(phy, y, node, model=c("BM", "EB", "nestedEB", "nestedE
  		}
   			
   			results$aic <- 2 * k - 2 * results$lnl
-  			results$aicc <- 2 * k * (n - 1)/(n - k - 2) - 2 * results$lnl
+			results$aicc <- aicc(results$lnl, k, Ntip(phy))
   			results$k <- k
   			return(results)  
 		}

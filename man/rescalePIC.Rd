@@ -6,11 +6,16 @@
 \usage{
 rescalePIC(phy, y)
 }
+\arguments{
+\item{phy}{dated tree in ape format}
+
+\item{y}{named vector of trait values}
+}
 \value{
-node
+phy a rescaled phylogeny
 }
 \description{
-rescalePIC function
+rescalePIC a function to produce a re-scaled phylogeny using IC
 }
 \examples{
 rescalePIC()

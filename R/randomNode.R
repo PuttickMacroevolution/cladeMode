@@ -1,6 +1,6 @@
 #' randomNode
 #'
-#' randomNode
+#' randomNode (internal function)
 #' @param phylo input phylogeny
 #' @param size minimum n tips of descending node (as given by a proportion of total tips)
 #' @param overSize return node ancestral to n tips as specified by 'size' or not (default = TRUE)

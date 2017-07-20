@@ -1,13 +1,17 @@
 #' independent contrasts calculation
 #'
-#' independent contrasts calculation
-#' @param phy
-#' @param yDat
+#'  calculates independent contrasts and returns the IC of trait values, ancestral state estimates, phylogenetic mean, rate of BM evolution, root variance, the rescaled phylogeny  and the log-likelihood
+#' @param phy dated tree in ape format
+#' @param yDat named vector of trait values 
 #' @keywords 
 #' @return list of parameters
 #' @export
 #' @examples
-#' phyIC()
+#' set.seed(30)
+#' # simulate tree with 20 species
+#' simTree <- rcoal(20)
+#' simData <- cladeModeSim(n=1, phy=simTree, mode="BM")
+#' phyIC(simTree, simData)
 
 phyIC <- function(phy, yDat) {
 	

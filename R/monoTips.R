@@ -1,6 +1,6 @@
 #' monoTips
 #'
-#' monoTips
+#' monoTips calculates the proportion of the tree diversity represented by a clade
 #' @param phylo input phylogeny
 #' @param node 
 #' @keywords 

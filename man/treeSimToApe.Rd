@@ -13,8 +13,8 @@ treeSimToApe(treeSimPhy)
 trApe tree in APE format
 }
 \description{
-convert treeSim to APE
+convert treeSim simulated phylogeny into to APE format
 }
 \examples{
-phyIC()
+treeSimToApe()
 }

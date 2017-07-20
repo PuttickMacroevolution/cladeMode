@@ -1,7 +1,7 @@
 #' Analyse nested modes of evolution
 #'
-#' Analyses various nested modes of continous trait evolution the can be applied to the whole phylogeny (BM, OU, EB) or nested within subclades of the phylogeny ("nested EB", "nested EB rate", "rate Shift", "nested OU")
-#' @param dated phy tree in APE format. Although non-ultrametric phylogenies can be used the method has only been tested on ultrametric trees. 
+#' Analyses various nested modes of continous trait evolution applied to the whole phylogeny (BM, OU, EB) or nested within subclades of the phylogeny ("nested EB", "nested EB rate", "rate Shift", "nested OU")
+#' @param phy dated tree in APE format. Although non-ultrametric phylogenies can be used the method has only been tested on ultrametric trees
 #' @param y named vector of trait data
 #' @param node number of node at which to estimate nested evolutionary mode. If FALSE (default) the model tests model fit at all nodes using an iterative procedure. The nodes at which the model is applied it determined by the minSize argument
 #' @param minSize the minimum size of node at which to select a nested rate. The number represents the minimum size of the clade for which all models will be nested. 
@@ -9,6 +9,7 @@
 #' @param ncores number of seperate cores to simultaneously estimate rate shifts - defaults to 1
 #' @param contrasts logical (default = FALSE) as to whether to estimate parameters with the default likelihood search or independent contrasts
 #' @param returnPhy logical (default = FALSE) returns re-scaled phylogeny according the best-fitting model
+#' @param measureError a named vector of measurement error around the trait data y. If NULL (default) the model assumes no measurement error. Warning: this is currently not fully tested and only applies to all models (except BM) when 'contrasts=FALSE'
 #' @keywords 
 #' @return results a list containing the model parameters, log likelihood, aicc, optionally the rescaled tree
 #' @export
@@ -17,8 +18,7 @@
 #' set.seed(30)
 #' # simulate tree with 20 species
 #' simTree <- rcoal(20)
-#' simData <- t(rmvnorm(1, sigma=vcv(simTree)))
-#' rownames(simData) <- simTree$tip.label
+#' simData <- cladeModeSim(n=1, phy=simTree, mode="BM")
 #' ##### comparison between geiger and cladeMode parameter estimates using early burst model
 #' #cladeMode
 #' unlist(cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T))
@@ -69,26 +69,32 @@
 #' aicW <- aiccWeight(c(bmRes$aicc, nestedRateShiftRes$aicc + cutOffAICc))
 #' aicW
 
-cladeMode <- function(phy, y, node=F, minSize=5, mode=c("BM", "OU", "EB",  "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), Ncores=1, contrasts=FALSE, returnPhy=FALSE) {
+cladeMode <- function(phy, y, node=F, minSize=5, mode=c("BM", "OU", "EB",  "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), Ncores=1, contrasts=FALSE, returnPhy=FALSE, measureError=NULL) {
 	require(parallel)
 	require(ape)
 	require(mvtnorm)
 	
 	cont <- contrasts
 	nested <- c("nestedEB", "nestedEBRate", "rateShift", "nestedOU")
+	if(measureError == NULL) measureError <- rep(0, Ntip(phy))
+	
+	mErr <- measureError 
+	
 
 	if(sum(node) != 0 && is.na(match(mode, nested))) print("mode applies to whole tree: node argument ignored")
 	if(is.null(names(y)) == T) stop("please provide data names")
+	if(length(measureError) != Ntip(phy)) stop("measurement error not equal in length to trait data")
+	
 	
 	if(sum(match(mode, nested), na.rm = T) == 0) {
-		return(cladeModeNode(phy, y, model=mode, cont=cont, returnPhy=returnPhy))
+		return(cladeModeNode(phy, y, model=mode, cont=cont, returnPhy=returnPhy, mErr=mErr))
 	}
 	
 	if(is.numeric(node) == F && sum(match(mode, nested), na.rm = T) != 0) {
 		allNodesComplete <- getNodes(phy)
 		tips <- sapply(1:length(allNodesComplete), function(u) length(which(monoClade(phy, allNodesComplete[u]) <= Ntip(phy))))
 		allNodes <- allNodesComplete[which(tips > minSize)] 
-		allNest <- mclapply(allNodes, mc.cores=Ncores, function(x) cladeModeNode(phy, y, node=x, model=mode, cont=cont, returnPhy=returnPhy))
+		allNest <- mclapply(allNodes, mc.cores=Ncores, function(x) cladeModeNode(phy, y, node=x, model=mode, cont=cont, returnPhy=returnPhy, mErr=mErr))
 		converge <- sapply(allNest, function(x) is.numeric(x[[1]]))
 		allNest <- allNest[converge]
 		aiccScore <- sapply(1:length(allNest), function(x) allNest[[x]]$aicc)
@@ -97,6 +103,6 @@ cladeMode <- function(phy, y, node=F, minSize=5, mode=c("BM", "OU", "EB",  "nest
 	}
 
 	if(is.numeric(node) == T && sum(match(mode, nested), na.rm = T) != 0) {
-		return(cladeModeNode(phy, y, node=node, model=mode, cont=cont, returnPhy=returnPhy))
+		return(cladeModeNode(phy, y, node=node, model=mode, cont=cont, returnPhy=returnPhy, mErr=mErr))
 	}
 }

@@ -1,7 +1,7 @@
 #' identify nodes of a monophyletic clade
 #'
 #' identify nodes of a monophyletic clade
-#' @param phylo
+#' @param phylo dated tree in ape format
 #' @param node
 #' @keywords 
 #' @return storeNodes

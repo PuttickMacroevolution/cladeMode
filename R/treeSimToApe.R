@@ -1,12 +1,12 @@
 #' convert treeSim to APE
 #'
-#' convert treeSim to APE
+#' convert treeSim simulated phylogeny into to APE format
 #' @param treeSimPhy phylogeny from treeSim
 #' @keywords 
 #' @return trApe tree in APE format
 #' @export
 #' @examples
-#' phyIC()
+#' treeSimToApe()
 
 treeSimToApe <- function(treeSimPhy) {
   trApe <- treeSimPhy

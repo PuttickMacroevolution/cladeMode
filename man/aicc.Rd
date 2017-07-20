@@ -17,7 +17,7 @@ aicc(x, k, n)
 aicc
 }
 \description{
-aicc function
+aicc function caculates aicc (used internally)
 }
 \examples{
 aicc()

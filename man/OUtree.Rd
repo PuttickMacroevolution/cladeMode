@@ -10,7 +10,7 @@ OUtree(phy_tree, alpha, branches, times, originTime)
 phy_tree
 }
 \description{
-rateClade function
+rateClade function (internal function) rescale tree according to an OU process using alpha
 }
 \examples{
 OUtree()

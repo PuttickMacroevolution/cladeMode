@@ -1,6 +1,6 @@
 #' subClade function
 #'
-#' subClade function
+#' subClade function rescales a phylogeny subclade acording to an EB model (used internally)
 #' @param phy_tree
 #' @param a
 #' @param node
@@ -19,8 +19,8 @@ subClade <- function(phy_tree, a, node, branches, times, originTime, rate=1) {
 	for (i in branches) {
    	bl <- phy_tree$edge.length[i] 
    	age <- times[i] 
-   	t1 <- originTime - age	  #distance from root
-   	t2 <- t1 + bl          	#length from root plus original length
+   	t1 <- originTime - age	
+   	t2 <- t1 + bl          	
    	phy_tree$edge.length[i] <- ((exp(a*t2)-exp(a*t1))/(a))
 	}
 	phy_tree	

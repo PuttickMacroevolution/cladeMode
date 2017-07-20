@@ -13,7 +13,7 @@ rateClade(phy_tree, branches, rate = 1)
 phy_tree
 }
 \description{
-rateClade function
+rateClade function rescales branches according to rate (used internally)
 }
 \examples{
 rateClade()

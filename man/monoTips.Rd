@@ -12,7 +12,7 @@ monoTips(phylo, node)
 \item{node}{}
 }
 \description{
-monoTips
+monoTips calculates the proportion of the tree diversity represented by a clade
 }
 \examples{
 monoTips()

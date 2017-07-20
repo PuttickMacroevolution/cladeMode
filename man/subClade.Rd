@@ -13,7 +13,7 @@ subClade(phy_tree, a, node, branches, times, originTime, rate = 1)
 phy_tree
 }
 \description{
-subClade function
+subClade function rescales a phylogeny subclade acording to an EB model (used internally)
 }
 \examples{
 subClade()

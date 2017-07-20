@@ -6,9 +6,11 @@
 \usage{
 cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "OU", "EB",
   "nestedEB", "nestedEBRate", "rateShift", "nestedOU"), Ncores = 1,
-  contrasts = FALSE, returnPhy = FALSE)
+  contrasts = FALSE, returnPhy = FALSE, measureError = NULL)
 }
 \arguments{
+\item{phy}{dated tree in APE format. Although non-ultrametric phylogenies can be used the method has only been tested on ultrametric trees}
+
 \item{y}{named vector of trait data}
 
 \item{node}{number of node at which to estimate nested evolutionary mode. If FALSE (default) the model tests model fit at all nodes using an iterative procedure. The nodes at which the model is applied it determined by the minSize argument}
@@ -21,7 +23,7 @@ cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "OU", "EB",
 
 \item{returnPhy}{logical (default = FALSE) returns re-scaled phylogeny according the best-fitting model}
 
-\item{dated}{phy tree in APE format. Although non-ultrametric phylogenies can be used the method has only been tested on ultrametric trees.}
+\item{measureError}{a named vector of measurement error around the trait data y. If NULL (default) the model assumes no measurement error. Warning: this is currently not fully tested and only applies to all models (except BM) when 'contrasts=FALSE'}
 
 \item{ncores}{number of seperate cores to simultaneously estimate rate shifts - defaults to 1}
 }
@@ -29,15 +31,14 @@ cladeMode(phy, y, node = F, minSize = 5, mode = c("BM", "OU", "EB",
 results a list containing the model parameters, log likelihood, aicc, optionally the rescaled tree
 }
 \description{
-Analyses various nested modes of continous trait evolution the can be applied to the whole phylogeny (BM, OU, EB) or nested within subclades of the phylogeny ("nested EB", "nested EB rate", "rate Shift", "nested OU")
+Analyses various nested modes of continous trait evolution applied to the whole phylogeny (BM, OU, EB) or nested within subclades of the phylogeny ("nested EB", "nested EB rate", "rate Shift", "nested OU")
 }
 \examples{
 library(geiger)
 set.seed(30)
 # simulate tree with 20 species
 simTree <- rcoal(20)
-simData <- t(rmvnorm(1, sigma=vcv(simTree)))
-rownames(simData) <- simTree$tip.label
+simData <- cladeModeSim(n=1, phy=simTree, mode="BM")
 ##### comparison between geiger and cladeMode parameter estimates using early burst model
 #cladeMode
 unlist(cladeMode(phy=simTree, y=simData[,1], mode="EB", cont=T))

@@ -13,8 +13,9 @@ aiccWeight(aicc)
 aicc
 }
 \description{
-aicc weight function
+aicc weight function calculates the aicc weight of a group of models
 }
 \examples{
-aiccWeight()
+fakeAICc <- c(435, 438, 434, 440)
+aiccWeight(fakeAICc)
 }

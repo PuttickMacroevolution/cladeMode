@@ -14,7 +14,7 @@ randomNode(phylo, size = 0.25, overSize = TRUE)
 \item{overSize}{return node ancestral to n tips as specified by 'size' or not (default = TRUE)}
 }
 \description{
-randomNode
+randomNode (internal function)
 }
 \examples{
 nodeDes()

@@ -1,6 +1,6 @@
 #' rateClade function
 #'
-#' rateClade function
+#' rateClade function rescales branches according to rate (used internally)
 #' @param phy_tree
 #' @param branches
 #' @param rate default = 1
